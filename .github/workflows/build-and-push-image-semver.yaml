@@ -1,3 +1,9 @@
+# Fork-friendly modifications applied:
+# - Jobs requiring upstream secrets will be skipped in forks
+# - Self-hosted runners replaced with GitHub-hosted runners
+# - Non-critical steps set to continue-on-error
+# Original upstream: unknown
+
 name: Publish AnythingLLM Docker image on Release (amd64 & arm64)
 
 concurrency:
@@ -11,7 +17,7 @@ on:
 jobs:
   push_multi_platform_to_registries:
     name: Push Docker multi-platform image to multiple registries
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
