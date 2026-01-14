@@ -1,3 +1,9 @@
+# Fork-friendly modifications applied:
+# - Jobs requiring upstream secrets will be skipped in forks
+# - Self-hosted runners replaced with GitHub-hosted runners
+# - Non-critical steps set to continue-on-error
+# Original upstream: unknown
+
 name: AnythingLLM Development Docker image (amd64/arm64)
 
 concurrency:
@@ -23,7 +29,7 @@ on:
 jobs:
   push_dev_build_to_dockerhub:
     name: Push development build image to Docker Hub
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
