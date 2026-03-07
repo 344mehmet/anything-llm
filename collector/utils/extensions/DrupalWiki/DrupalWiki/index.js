@@ -11,6 +11,8 @@ const {
   sanitizeFileName,
   writeToServerDocuments,
   documentsFolder,
+  normalizePath,
+  isWithin,
 } = require("../../../files");
 const { default: slugify } = require("slugify");
 const path = require("path");
@@ -264,7 +266,7 @@ class DrupalWiki {
    * @returns {string}
    * @private
    */
-  #processPageBody({ body, url, title, lastModified }) {
+  #processPageBody({ body, title }) {
     const textContent = body.trim() !== "" ? body : title;
 
     const plainTextContent = htmlToText(textContent, {
@@ -312,10 +314,20 @@ class DrupalWiki {
         }
 
         const buffer = await attachmentResponse.arrayBuffer();
-        const localFilePath = `${WATCH_DIRECTORY}/${fileName}`;
-        require("fs").writeFileSync(localFilePath, Buffer.from(buffer));
+        const localFilePath = normalizePath(
+          sanitizeFileName(path.resolve(WATCH_DIRECTORY, fileName))
+        );
+        if (!isWithin(path.resolve(WATCH_DIRECTORY), localFilePath)) {
+          console.error(
+            `[DrupalWiki Loader]: File name ${localFilePath} is not within the storage path ${path.resolve(
+              WATCH_DIRECTORY
+            )}`
+          );
+          continue;
+        }
 
-        await processSingleFile(fileName);
+        require("fs").writeFileSync(localFilePath, Buffer.from(buffer));
+        await processSingleFile(localFilePath);
       }
     } catch (err) {
       console.error(`Fetching/processing attachments failed:`, err);

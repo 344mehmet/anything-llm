@@ -22,8 +22,6 @@ const TRANSLATIONS = {
         "It's important to save this password because there is no recovery method.",
 
       adminUsername: "Admin account username",
-      adminUsernameReq:
-        "Username must be at least 6 characters long and only contain lowercase letters, numbers, underscores, and hyphens with no spaces.",
       adminPassword: "Admin account password",
       adminPasswordReq: "Passwords must be at least 8 characters.",
       teamHint:
@@ -71,6 +69,8 @@ const TRANSLATIONS = {
     yes: "Yes",
     no: "No",
     search: "Search",
+    username_requirements:
+      "Username must be 2-32 characters, start with a lowercase letter, and only contain lowercase letters, numbers, underscores, hyphens, and periods.",
   },
   home: {
     welcome: "Welcome",
@@ -106,18 +106,25 @@ const TRANSLATIONS = {
     privacy: "Privacy & Data",
     "ai-providers": "AI Providers",
     "agent-skills": "Agent Skills",
+    "community-hub": {
+      title: "Community Hub",
+      trending: "Explore Trending",
+      "your-account": "Your Account",
+      "import-item": "Import Item",
+    },
     admin: "Admin",
     tools: "Tools",
     "system-prompt-variables": "System Prompt Variables",
     "experimental-features": "Experimental Features",
     contact: "Contact Support",
     "browser-extension": "Browser Extension",
+    "mobile-app": "AnythingLLM Mobile",
   },
 
   // Page Definitions
   login: {
     "multi-user": {
-      welcome: "Welcome to",
+      welcome: "Welcome",
       "placeholder-username": "Username",
       "placeholder-password": "Password",
       login: "Login",
@@ -125,10 +132,8 @@ const TRANSLATIONS = {
       "forgot-pass": "Forgot password",
       reset: "Reset",
     },
-    "sign-in": {
-      start: "Sign in to your",
-      end: "account.",
-    },
+    "sign-in":
+      "Enter your username and password to access your {{appName}} instance.",
     "password-reset": {
       title: "Password Reset",
       description:
@@ -140,6 +145,7 @@ const TRANSLATIONS = {
   },
 
   "main-page": {
+    greeting: "How can I help you today?",
     noWorkspaceError: "Please create a workspace before starting a chat.",
     checklist: {
       title: "Getting Started",
@@ -178,6 +184,11 @@ const TRANSLATIONS = {
           action: "Browse",
         },
       },
+    },
+    quickActions: {
+      createAgent: "Create an Agent",
+      editWorkspace: "Edit Workspace",
+      uploadDocument: "Upload a Document",
     },
     quickLinks: {
       title: "Quick Links",
@@ -427,12 +438,17 @@ const TRANSLATIONS = {
           "Enable the default agent to generate and write to files that can be saved to your computer.",
       },
       web: {
-        title: "Live web search and browsing",
-        "desc-start":
+        title: "Web Search",
+        description:
           "Enable your agent to search the web to answer your questions by connecting to a web-search (SERP) provider.",
-        "desc-end":
-          "Web search during agent sessions will not work until this is set up.",
       },
+      sql: {
+        title: "SQL Connector",
+        description:
+          "Enable your agent to be able to leverage SQL to answer you questions by connecting to various SQL database providers.",
+      },
+      default_skill:
+        "By default, this skill is enabled, but you can disable it if you don't want it to be available to the agent.",
     },
   },
 
@@ -988,8 +1004,6 @@ const TRANSLATIONS = {
     profile_picture: "Profile Picture",
     remove_profile_picture: "Remove Profile Picture",
     username: "Username",
-    username_description:
-      "Username must only contain lowercase letters, numbers, underscores, and hyphens with no spaces",
     new_password: "New Password",
     password_description: "Password must be at least 8 characters long",
     cancel: "Cancel",

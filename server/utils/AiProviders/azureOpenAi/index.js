@@ -15,11 +15,15 @@ class AzureOpenAiLLM {
     if (!process.env.AZURE_OPENAI_KEY)
       throw new Error("No Azure API key was set.");
 
+    this.className = "AzureOpenAiLLM";
     this.openai = new OpenAI({
       apiKey: process.env.AZURE_OPENAI_KEY,
       baseURL: AzureOpenAiLLM.formatBaseUrl(process.env.AZURE_OPENAI_ENDPOINT),
     });
-    this.model = modelPreference ?? process.env.OPEN_MODEL_PREF;
+    this.model =
+      modelPreference ||
+      process.env.AZURE_OPENAI_MODEL_PREF ||
+      process.env.OPEN_MODEL_PREF;
     /* 
       Note: Azure OpenAI deployments do not expose model metadata that would allow us to
       programmatically detect whether the deployment uses a reasoning model (o1, o1-mini, o3-mini, etc.).
@@ -54,7 +58,7 @@ class AzureOpenAiLLM {
       url.search = "";
       url.hash = "";
       return url.href;
-    } catch (error) {
+    } catch {
       throw new Error(
         `"${azureOpenAiEndpoint}" is not a valid URL. Check your settings for the Azure OpenAI provider and set a valid endpoint URL.`
       );
@@ -149,7 +153,7 @@ class AzureOpenAiLLM {
   async getChatCompletion(messages = [], { temperature = 0.7 }) {
     if (!this.model)
       throw new Error(
-        "No OPEN_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like GPT-3.5."
+        "No AZURE_OPENAI_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like GPT-3.5."
       );
 
     const result = await LLMPerformanceMonitor.measureAsyncFunction(
@@ -175,6 +179,7 @@ class AzureOpenAiLLM {
         outputTps: result.output.usage.completion_tokens / result.duration,
         duration: result.duration,
         model: this.model,
+        provider: this.className,
         timestamp: new Date(),
       },
     };
@@ -183,7 +188,7 @@ class AzureOpenAiLLM {
   async streamGetChatCompletion(messages = [], { temperature = 0.7 }) {
     if (!this.model)
       throw new Error(
-        "No OPEN_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like GPT-3.5."
+        "No AZURE_OPENAI_MODEL_PREF ENV defined. This must the name of a deployment on your Azure account for an LLM chat model like GPT-3.5."
       );
 
     const measuredStreamRequest = await LLMPerformanceMonitor.measureStream({
@@ -197,6 +202,7 @@ class AzureOpenAiLLM {
       messages,
       runPromptTokenCalculation: true,
       modelTag: this.model,
+      provider: this.className,
     });
 
     return measuredStreamRequest;

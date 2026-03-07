@@ -36,8 +36,6 @@ const TRANSLATIONS = {
       passwordWarn:
         "Conservez ce mot de passe, il n'y a pas de récupération possible.",
       adminUsername: "Nom d'utilisateur administrateur",
-      adminUsernameReq:
-        "Le nom d'utilisateur doit contenir au moins 6 caractères.",
       adminPassword: "Mot de passe administrateur",
       adminPasswordReq: "Le mot de passe doit contenir au moins 8 caractères.",
       teamHint:
@@ -70,6 +68,8 @@ const TRANSLATIONS = {
     yes: "Oui",
     no: "Non",
     search: "Rechercher",
+    username_requirements:
+      "Le nom d'utilisateur doit comporter entre 2 et 32 caractères, commencer par une lettre minuscule et ne contenir que des lettres minuscules, des chiffres, des tirets bas, des tirets et des points.",
   },
   settings: {
     title: "Paramètres de l'instance",
@@ -102,6 +102,13 @@ const TRANSLATIONS = {
     interface: "Interface",
     branding: "Personnalisation",
     chat: "Chat",
+    "mobile-app": "AnythingLLM Mobile",
+    "community-hub": {
+      title: "Centre communautaire",
+      trending: "Découvrez les tendances",
+      "your-account": "Votre compte",
+      "import-item": "Importer",
+    },
   },
   login: {
     "multi-user": {
@@ -113,10 +120,7 @@ const TRANSLATIONS = {
       "forgot-pass": "Mot de passe oublié",
       reset: "Réinitialiser",
     },
-    "sign-in": {
-      start: "Connectez-vous à votre",
-      end: "compte.",
-    },
+    "sign-in": "Connectez-vous à votre compte {{appName}}.",
     "password-reset": {
       title: "Réinitialisation du mot de passe",
       description:
@@ -324,11 +328,16 @@ const TRANSLATIONS = {
       },
       web: {
         title: "Recherche web en direct et navigation",
-        "desc-start":
-          "Permettez à votre agent de rechercher sur le web pour répondre à vos questions en se connectant à un fournisseur de recherche web (SERP).",
-        "desc-end":
-          "La recherche web pendant les sessions d'agent ne fonctionnera pas tant que cela ne sera pas configuré.",
+        description:
+          "Permettez à votre agent de rechercher sur le web pour répondre à vos questions en vous connectant à un fournisseur de recherche web (SERP).",
       },
+      sql: {
+        title: "Connecteur SQL",
+        description:
+          "Permettez à votre agent d'utiliser SQL pour répondre à vos questions en lui fournissant un accès à divers fournisseurs de bases de données SQL.",
+      },
+      default_skill:
+        "Par défaut, cette fonctionnalité est activée, mais vous pouvez la désactiver si vous ne souhaitez pas qu'elle soit disponible pour l'agent.",
     },
   },
   recorded: {
@@ -371,7 +380,8 @@ const TRANSLATIONS = {
         model_type: "Type de modèle",
         default: "Par défaut",
         reasoning: "Raisonnement",
-        model_type_tooltip: null,
+        model_type_tooltip:
+          "Si votre déploiement utilise un modèle de raisonnement (o1, o1-mini, o3-mini, etc.), veuillez définir cette option sur « Raisonnement ». Sinon, vos requêtes de conversation pourraient échouer.",
       },
     },
   },
@@ -702,11 +712,10 @@ const TRANSLATIONS = {
     cancel: "Annuler",
     edit_prompt: "Modifier le prompt",
     edit_response: "Modifier la réponse",
-    at_agent:
-      "Sélectionnez une compétence d'agent, un flux d'agent ou un serveur MCP",
+    at_agent: "@agent",
     default_agent_description: "l'agent par défaut de cet espace de travail",
     custom_agents_coming_soon: "Agents personnalisés bientôt disponibles",
-    slash_reset: "Effacer l'historique du chat",
+    slash_reset: "/reset",
     preset_reset_description:
       "Efface l'historique du chat actuel et commence une nouvelle conversation.",
     add_new_preset: "Ajouter une nouvelle commande preset",
@@ -738,8 +747,6 @@ const TRANSLATIONS = {
     profile_picture: "Photo de profil",
     remove_profile_picture: "Supprimer la photo de profil",
     username: "Nom d'utilisateur",
-    username_description:
-      "Le nom d'utilisateur doit contenir uniquement des lettres minuscules, des chiffres, des tirets bas et des tirets, sans espaces.",
     new_password: "Nouveau mot de passe",
     password_description:
       "Le mot de passe doit contenir au moins 8 caractères.",
@@ -946,6 +953,12 @@ const TRANSLATIONS = {
       },
       keyboardShortcuts: "Raccourcis clavier",
     },
+    quickActions: {
+      createAgent: "Créer un agent",
+      editWorkspace: "Modifier l'espace de travail",
+      uploadDocument: "Télécharger un document",
+    },
+    greeting: "Comment puis-je vous aider aujourd'hui ?",
   },
   "keyboard-shortcuts": {
     title: "Raccourcis clavier",

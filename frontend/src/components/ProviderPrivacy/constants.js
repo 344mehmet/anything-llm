@@ -41,6 +41,10 @@ import MoonshotAiLogo from "@/media/llmprovider/moonshotai.png";
 import CometApiLogo from "@/media/llmprovider/cometapi.png";
 import FoundryLogo from "@/media/llmprovider/foundry-local.png";
 import GiteeAILogo from "@/media/llmprovider/giteeai.png";
+import DockerModelRunnerLogo from "@/media/llmprovider/docker-model-runner.png";
+import PrivateModeLogo from "@/media/llmprovider/privatemode.png";
+import SambaNovaLogo from "@/media/llmprovider/sambanova.png";
+import LemonadeLogo from "@/media/llmprovider/lemonade.png";
 
 const LLM_PROVIDER_PRIVACY_MAP = {
   openai: {
@@ -224,6 +228,30 @@ const LLM_PROVIDER_PRIVACY_MAP = {
     policyUrl: "https://ai.gitee.com/docs/appendix/privacy",
     logo: GiteeAILogo,
   },
+  "docker-model-runner": {
+    name: "Docker Model Runner",
+    description: [
+      "Your model and chats are only accessible on the machine running Docker Model Runner.",
+    ],
+    logo: DockerModelRunnerLogo,
+  },
+  privatemode: {
+    name: "Privatemode",
+    policyUrl: "https://docs.privatemode.ai/getting-started/faq#q2",
+    logo: PrivateModeLogo,
+  },
+  sambanova: {
+    name: "SambaNova",
+    policyUrl: "https://sambanova.ai/privacy-policy",
+    logo: SambaNovaLogo,
+  },
+  lemonade: {
+    name: "Lemonade",
+    description: [
+      "Your model and chats are only accessible on the machine running the Lemonade server.",
+    ],
+    logo: LemonadeLogo,
+  },
 };
 
 const VECTOR_DB_PROVIDER_PRIVACY_MAP = {
@@ -366,6 +394,13 @@ const EMBEDDING_ENGINE_PROVIDER_PRIVACY_MAP = {
     name: "Google Gemini",
     policyUrl: "https://policies.google.com/privacy",
     logo: GeminiLogo,
+  },
+  lemonade: {
+    name: "Lemonade",
+    description: [
+      "Your document text is embedded privately on the machine running the Lemonade server.",
+    ],
+    logo: LemonadeLogo,
   },
 };
 

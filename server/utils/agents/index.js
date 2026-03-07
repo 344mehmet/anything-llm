@@ -217,6 +217,26 @@ class AgentHandler {
         if (!process.env.COHERE_API_KEY)
           throw new Error("Cohere API key must be provided to use agents.");
         break;
+      case "docker-model-runner":
+        if (!process.env.DOCKER_MODEL_RUNNER_BASE_PATH)
+          throw new Error(
+            "Docker Model Runner base path must be provided to use agents."
+          );
+        break;
+      case "privatemode":
+        if (!process.env.PRIVATEMODE_LLM_BASE_PATH)
+          throw new Error(
+            "Privatemode base path must be provided to use agents."
+          );
+        break;
+      case "sambanova":
+        if (!process.env.SAMBANOVA_LLM_API_KEY)
+          throw new Error("SambaNova API key must be provided to use agents.");
+        break;
+      case "lemonade":
+        if (!process.env.LEMONADE_LLM_BASE_PATH)
+          throw new Error("Lemonade base path must be provided to use agents.");
+        break;
       default:
         throw new Error(
           "No workspace agent provider set. Please set your agent provider in the workspace's settings"
@@ -237,7 +257,7 @@ class AgentHandler {
       case "anthropic":
         return process.env.ANTHROPIC_MODEL_PREF ?? "claude-3-sonnet-20240229";
       case "lmstudio":
-        return process.env.LMSTUDIO_MODEL_PREF ?? "server-default";
+        return process.env.LMSTUDIO_MODEL_PREF ?? null;
       case "ollama":
         return process.env.OLLAMA_MODEL_PREF ?? "llama3:latest";
       case "groq":
@@ -248,7 +268,9 @@ class AgentHandler {
           "mistralai/Mixtral-8x7B-Instruct-v0.1"
         );
       case "azure":
-        return process.env.OPEN_MODEL_PREF;
+        return (
+          process.env.AZURE_OPENAI_MODEL_PREF || process.env.OPEN_MODEL_PREF
+        );
       case "koboldcpp":
         return process.env.KOBOLD_CPP_MODEL_PREF ?? null;
       case "localai":
@@ -297,6 +319,14 @@ class AgentHandler {
         return process.env.GITEE_AI_MODEL_PREF ?? null;
       case "cohere":
         return process.env.COHERE_MODEL_PREF ?? "command-r-08-2024";
+      case "docker-model-runner":
+        return process.env.DOCKER_MODEL_RUNNER_LLM_MODEL_PREF ?? null;
+      case "privatemode":
+        return process.env.PRIVATEMODE_LLM_MODEL_PREF ?? null;
+      case "sambanova":
+        return process.env.SAMBANOVA_LLM_MODEL_PREF ?? null;
+      case "lemonade":
+        return process.env.LEMONADE_LLM_MODEL_PREF ?? null;
       default:
         return null;
     }
@@ -436,6 +466,8 @@ class AgentHandler {
       }
 
       // Load flow plugin. This is marked by `@@flow_` in the array of functions to load.
+      // Replace the @@flow_ placeholder in the agent's function list with the actual
+      // tool name so the function lookup in reply() can find it.
       if (name.startsWith("@@flow_")) {
         const uuid = name.replace("@@flow_", "");
         const plugin = AgentFlows.loadFlowPlugin(uuid, this.aibitat);
@@ -445,6 +477,11 @@ class AgentHandler {
           );
           continue;
         }
+
+        this.aibitat.agents.get("@agent").functions = this.aibitat.agents
+          .get("@agent")
+          .functions.filter((f) => f !== name);
+        this.aibitat.agents.get("@agent").functions.push(plugin.name);
 
         this.aibitat.use(plugin.plugin());
         this.log(
@@ -558,7 +595,7 @@ class AgentHandler {
 
   async createAIbitat(
     args = {
-      socket,
+      socket: null,
     }
   ) {
     this.aibitat = new AIbitat({

@@ -21,6 +21,14 @@ function utilEndpoints(app) {
       response.sendStatus(500).end();
     }
   });
+
+  const {
+    dockerModelRunnerUtilsEndpoints,
+  } = require("./utils/dockerModelRunnerUtils");
+  dockerModelRunnerUtilsEndpoints(app);
+
+  const { lemonadeUtilsEndpoints } = require("./utils/lemonadeUtilsEndpoints");
+  lemonadeUtilsEndpoints(app);
 }
 
 function getGitVersion() {
@@ -89,7 +97,8 @@ function getModelTag() {
       model = process.env.TOGETHER_AI_MODEL_PREF;
       break;
     case "azure":
-      model = process.env.OPEN_MODEL_PREF;
+      model =
+        process.env.AZURE_OPENAI_MODEL_PREF || process.env.OPEN_MODEL_PREF;
       break;
     case "koboldcpp":
       model = process.env.KOBOLD_CPP_MODEL_PREF;
@@ -153,6 +162,18 @@ function getModelTag() {
       break;
     case "cohere":
       model = process.env.COHERE_MODEL_PREF;
+      break;
+    case "docker-model-runner":
+      model = process.env.DOCKER_MODEL_RUNNER_LLM_MODEL_PREF;
+      break;
+    case "privatemode":
+      model = process.env.PRIVATEMODE_LLM_MODEL_PREF;
+      break;
+    case "sambanova":
+      model = process.env.SAMBANOVA_LLM_MODEL_PREF;
+      break;
+    case "lemonade":
+      model = process.env.LEMONADE_LLM_MODEL_PREF;
       break;
     default:
       model = "--";

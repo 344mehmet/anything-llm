@@ -49,7 +49,7 @@ function workspaceEndpoints(app) {
     async (request, response) => {
       try {
         const user = await userFromSession(request, response);
-        const { name = null, onboardingComplete = false } = reqBody(request);
+        const { name = null } = reqBody(request);
         const { workspace, message } = await Workspace.new(name, user?.id);
         await Telemetry.sendTelemetry(
           "workspace_created",
@@ -71,9 +71,6 @@ function workspaceEndpoints(app) {
           },
           user?.id
         );
-        if (onboardingComplete === true)
-          await Telemetry.sendTelemetry("onboarding_complete");
-
         response.status(200).json({ workspace, message });
       } catch (e) {
         console.error(e.message, e);

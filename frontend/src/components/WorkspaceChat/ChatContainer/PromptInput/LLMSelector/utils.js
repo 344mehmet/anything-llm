@@ -38,12 +38,13 @@ export function validatedModelSelection(model) {
 
     // If the model is in the dropdown, return the model as is
     return model;
-  } catch (error) {
+  } catch {
     return null; // If the dropdown was empty or something else went wrong, return null to abort the save
   }
 }
 
 export function hasMissingCredentials(settings, provider) {
+  if (!settings) return false;
   const providerEntry = AVAILABLE_LLM_PROVIDERS.find(
     (p) => p.value === provider
   );

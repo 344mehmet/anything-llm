@@ -112,6 +112,7 @@ class PPIOLLM {
    * @param {{userPrompt:string, attachments: import("../../helpers").Attachment[]}}
    * @returns {string|object[]}
    */
+  //eslint-disable-next-line
   #generateContent({ userPrompt, attachments = [] }) {
     if (!attachments.length) {
       return userPrompt;
@@ -177,6 +178,7 @@ class PPIOLLM {
         outputTps: result.output.usage.completion_tokens / result.duration,
         duration: result.duration,
         model: this.model,
+        provider: this.className,
         timestamp: new Date(),
       },
     };
@@ -198,6 +200,7 @@ class PPIOLLM {
       messages,
       runPromptTokenCalculation: true,
       modelTag: this.model,
+      provider: this.className,
     });
     return measuredStreamRequest;
   }

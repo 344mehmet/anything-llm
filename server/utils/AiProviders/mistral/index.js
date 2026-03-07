@@ -59,7 +59,7 @@ class MistralLLM {
     return 32000;
   }
 
-  async isValidChatCompletionModel(modelName = "") {
+  async isValidChatCompletionModel(_modelName = "") {
     return true;
   }
 
@@ -140,6 +140,7 @@ class MistralLLM {
         outputTps: result.output.usage.completion_tokens / result.duration,
         duration: result.duration,
         model: this.model,
+        provider: this.className,
         timestamp: new Date(),
       },
     };
@@ -161,6 +162,7 @@ class MistralLLM {
       messages,
       runPromptTokenCalculation: false,
       modelTag: this.model,
+      provider: this.className,
     });
     return measuredStreamRequest;
   }

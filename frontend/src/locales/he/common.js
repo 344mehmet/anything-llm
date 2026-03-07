@@ -21,8 +21,6 @@ const TRANSLATIONS = {
       passwordReq: "סיסמאות חייבות להכיל לפחות 8 תווים.",
       passwordWarn: "חשוב לשמור סיסמה זו מכיוון שאין שיטת שחזור.",
       adminUsername: "שם משתמש של חשבון מנהל",
-      adminUsernameReq:
-        "שם המשתמש חייב להכיל לפחות 6 תווים ויכול לכלול רק אותיות קטנות, מספרים, קווים תחתונים ומקפים, ללא רווחים.",
       adminPassword: "סיסמת חשבון מנהל",
       adminPasswordReq: "סיסמאות חייבות להכיל לפחות 8 תווים.",
       teamHint:
@@ -68,6 +66,8 @@ const TRANSLATIONS = {
     yes: "כן",
     no: "לא",
     search: "חיפוש",
+    username_requirements:
+      "שם המשתמש חייב להיות באורך 2-32 תווים, להתחיל באות קטנה ולהכיל רק אותיות קטנות, מספרים, קווים תחתונים, מקפים ונקודות.",
   },
   settings: {
     title: "הגדרות מופע",
@@ -100,6 +100,13 @@ const TRANSLATIONS = {
     "experimental-features": "תכונות ניסיוניות",
     contact: "צור קשר עם התמיכה",
     "browser-extension": "תוסף דפדפן",
+    "mobile-app": "AnythingLLM Mobile",
+    "community-hub": {
+      title: "מרכז קהילתי",
+      trending: "גלו את הנושאים החמים",
+      "your-account": "החשבון שלך",
+      "import-item": "ייבוא פריט",
+    },
   },
   login: {
     "multi-user": {
@@ -111,10 +118,7 @@ const TRANSLATIONS = {
       "forgot-pass": "שכחת סיסמה",
       reset: "איפוס",
     },
-    "sign-in": {
-      start: "התחבר ל",
-      end: "חשבונך.",
-    },
+    "sign-in": "התחבר לחשבון {{appName}} שלך.",
     "password-reset": {
       title: "איפוס סיסמה",
       description: "ספק את המידע הדרוש למטה כדי לאפס את סיסמתך.",
@@ -205,6 +209,12 @@ const TRANSLATIONS = {
       },
       keyboardShortcuts: "קיצורי מקלדת",
     },
+    quickActions: {
+      createAgent: "צור סוכן",
+      editWorkspace: "ערוך את סביבת העבודה",
+      uploadDocument: "העלה מסמך",
+    },
+    greeting: "במה אוכל לעזור לך היום?",
   },
   "new-workspace": {
     title: "סביבת עבודה חדשה",
@@ -395,11 +405,16 @@ const TRANSLATIONS = {
       },
       web: {
         title: "חיפוש וגלישה באינטרנט בזמן אמת",
-        "desc-start":
-          "אפשר לסוכן שלך לחפש באינטרנט כדי לענות על שאלותיך על ידי התחברות לספק חיפוש אינטרנטי (SERP).",
-        "desc-end":
-          "חיפוש אינטרנטי במהלך סשנים של סוכן לא יעבוד עד שהגדרה זו תבוצע.",
+        description:
+          "אפשרו לסוכן שלכם לחפש באינטרנט כדי לענות על שאלותיכם, על ידי חיבור לספק שירותי חיפוש (SERP).",
       },
+      sql: {
+        title: "חיבור SQL",
+        description:
+          "אפשרו לסוכן שלכם לנצל את SQL כדי לענות על שאלותיכם, על ידי חיבור למספר ספקי מסדי נתונים של SQL.",
+      },
+      default_skill:
+        "כברירת מחדל, הכישורים הזה מופעל, אך ניתן להשבית אותו אם אינכם רוצים שהוא יהיה זמין עבור הסוכן.",
     },
   },
   recorded: {
@@ -510,8 +525,9 @@ const TRANSLATIONS = {
         link: "קישור",
       },
       "render-html": {
-        title: null,
-        description: null,
+        title: "הצגת קוד HTML בשיחת צ'אט",
+        description:
+          "הצגת תגובות HTML בתגובות של עוזר.\nזה יכול להוביל לאיכות תגובה גבוהה בהרבה, אך גם עלול לגרום לסיכונים פוטנציאליים של אבטחה.",
       },
     },
   },
@@ -541,7 +557,8 @@ const TRANSLATIONS = {
         model_type: "סוג מודל",
         default: "ברירת מחדל",
         reasoning: "היגיון",
-        model_type_tooltip: null,
+        model_type_tooltip:
+          'אם השימוש שלך כולל מודל הסקה (o1, o1-mini, o3-mini וכו\'), הגדר זאת ל"הסקה". אחרת, בקשות השיחה שלך עלולות להיכשל.',
       },
     },
   },
@@ -759,8 +776,9 @@ const TRANSLATIONS = {
       pat_token_explained: "אסימון הגישה האישי שלך ב-Confluence.",
       task_explained:
         "לאחר השלמה, תוכן העמוד יהיה זמין להטמעה בסביבות עבודה בבורר המסמכים.",
-      bypass_ssl: null,
-      bypass_ssl_explained: null,
+      bypass_ssl: "התעלמות מאימות תעודת SSL",
+      bypass_ssl_explained:
+        "אפשר להפעיל את האפשרות זו כדי לעקוף את אימות תעודת ה-SSL עבור מופעי Confluence המאוחסנים באופן עצמאי עם תעודה שחתמה באופן עצמי.",
     },
     manage: {
       documents: "מסמכים",
@@ -857,10 +875,10 @@ const TRANSLATIONS = {
     cancel: "בטל",
     edit_prompt: "ערוך הנחיה",
     edit_response: "ערוך תגובה",
-    at_agent: "@סוכן",
+    at_agent: "@agent",
     default_agent_description: " - סוכן ברירת המחדל עבור סביבת עבודה זו.",
     custom_agents_coming_soon: "סוכנים מותאמים אישית יגיעו בקרוב!",
-    slash_reset: "/איפוס",
+    slash_reset: "/reset",
     preset_reset_description: "נקה את היסטוריית הצ'אט שלך והתחל צ'אט חדש",
     add_new_preset: " הוסף הגדרה קבועה חדשה",
     command: "פקודה",
@@ -888,8 +906,6 @@ const TRANSLATIONS = {
     profile_picture: "תמונת פרופיל",
     remove_profile_picture: "הסר תמונת פרופיל",
     username: "שם משתמש",
-    username_description:
-      "שם המשתמש חייב להכיל רק אותיות קטנות, מספרים, קווים תחתונים ומקפים, ללא רווחים",
     new_password: "סיסמה חדשה",
     password_description: "הסיסמה חייבת להכיל לפחות 8 תווים",
     cancel: "בטל",

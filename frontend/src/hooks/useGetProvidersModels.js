@@ -52,6 +52,8 @@ const groupedProviders = [
   "novita",
   "openrouter",
   "ppio",
+  "docker-model-runner",
+  "sambanova",
 ];
 export default function useGetProviderModels(provider = null) {
   const [defaultModels, setDefaultModels] = useState([]);

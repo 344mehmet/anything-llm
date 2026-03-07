@@ -34,13 +34,13 @@ export default function LiteLLMOptions({ settings }) {
         />
         <div className="flex flex-col w-60">
           <label className="text-white text-sm font-semibold block mb-3">
-            Token context window
+            Model context window
           </label>
           <input
             type="number"
             name="LiteLLMTokenLimit"
             className="border-none bg-theme-settings-input-bg text-white placeholder:text-theme-settings-input-placeholder text-sm rounded-lg focus:outline-primary-button active:outline-primary-button outline-none block w-full p-2.5"
-            placeholder="4096"
+            placeholder="8192"
             min={1}
             onScroll={(e) => e.target.blur()}
             defaultValue={settings?.LiteLLMTokenLimit}

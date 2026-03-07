@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Admin from "@/models/admin";
 import AnythingLLMIcon from "@/media/logo/anything-llm-icon.png";
-import GoogleSearchIcon from "./icons/google.png";
 import SerpApiIcon from "./icons/serpapi.png";
 import SearchApiIcon from "./icons/searchapi.png";
 import SerperDotDevIcon from "./icons/serper.png";
@@ -17,13 +16,13 @@ import {
   X,
   ListMagnifyingGlass,
 } from "@phosphor-icons/react";
+import Toggle from "@/components/lib/Toggle";
 import SearchProviderItem from "./SearchProviderItem";
 import WebSearchImage from "@/media/agents/scrape-websites.png";
 import {
   SerpApiOptions,
   SearchApiOptions,
   SerperDotDevOptions,
-  GoogleSearchOptions,
   BingSearchOptions,
   SerplySearchOptions,
   SearXNGOptions,
@@ -47,13 +46,6 @@ const SEARCH_PROVIDERS = [
     logo: DuckDuckGoIcon,
     options: () => <DuckDuckGoOptions />,
     description: "Free and privacy-focused web search using DuckDuckGo.",
-  },
-  {
-    name: "Google Search Engine",
-    value: "google-search-engine",
-    logo: GoogleSearchIcon,
-    options: (settings) => <GoogleSearchOptions settings={settings} />,
-    description: "Web search powered by a custom Google Search Engine.",
   },
   {
     name: "SerpApi",
@@ -121,6 +113,8 @@ const SEARCH_PROVIDERS = [
 
 export default function AgentWebSearchSelection({
   skill,
+  title,
+  description,
   settings,
   toggleSkill,
   enabled = false,
@@ -163,35 +157,32 @@ export default function AgentWebSearchSelection({
       .catch(() => setSelectedProvider("none"));
   }, []);
 
-  const selectedSearchProviderObject = SEARCH_PROVIDERS.find(
-    (provider) => provider.value === selectedProvider
-  );
+  const selectedSearchProviderObject =
+    SEARCH_PROVIDERS.find((provider) => provider.value === selectedProvider) ??
+    SEARCH_PROVIDERS[1];
 
   return (
     <div className="p-2">
       <div className="flex flex-col gap-y-[18px] max-w-[500px]">
-        <div className="flex items-center gap-x-2">
-          <ListMagnifyingGlass
-            size={24}
-            color="var(--theme-text-primary)"
-            weight="bold"
-          />
-          <label
-            htmlFor="name"
-            className="text-theme-text-primary text-md font-bold"
-          >
-            Live web search and browsing
-          </label>
-          <label className="border-none relative inline-flex items-center ml-auto cursor-pointer">
-            <input
-              type="checkbox"
-              className="peer sr-only"
-              checked={enabled}
-              onChange={() => toggleSkill(skill)}
+        <div className="flex w-full justify-between items-center">
+          <div className="flex items-center gap-x-2">
+            <ListMagnifyingGlass
+              size={24}
+              color="var(--theme-text-primary)"
+              weight="bold"
             />
-            <div className="peer-disabled:opacity-50 pointer-events-none peer h-6 w-11 rounded-full bg-[#CFCFD0] after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:shadow-xl after:border-none after:bg-white after:box-shadow-md after:transition-all after:content-[''] peer-checked:bg-[#32D583] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent"></div>
-            <span className="ml-3 text-sm font-medium"></span>
-          </label>
+            <label
+              htmlFor="name"
+              className="text-theme-text-primary text-md font-bold"
+            >
+              {title}
+            </label>
+          </div>
+          <Toggle
+            size="lg"
+            enabled={enabled}
+            onChange={() => toggleSkill(skill)}
+          />
         </div>
         <img
           src={WebSearchImage}
@@ -199,9 +190,7 @@ export default function AgentWebSearchSelection({
           className="w-full rounded-md"
         />
         <p className="text-theme-text-secondary text-opacity-60 text-xs font-medium py-1.5">
-          Enable your agent to search the web to answer your questions by
-          connecting to a web-search (SERP) provider. Web search during agent
-          sessions will not work until this is set up.
+          {description}
         </p>
         <div hidden={!enabled}>
           <div className="relative">

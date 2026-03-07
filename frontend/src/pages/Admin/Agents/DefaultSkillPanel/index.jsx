@@ -1,5 +1,7 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { DefaultBadge } from "../Badges/default";
+import Toggle from "@/components/lib/Toggle";
 
 export default function DefaultSkillPanel({
   title,
@@ -10,6 +12,7 @@ export default function DefaultSkillPanel({
   toggleSkill,
   skill,
 }) {
+  const { t } = useTranslation();
   return (
     <div className="p-2">
       <div className="flex flex-col gap-y-[18px] max-w-[500px]">
@@ -29,26 +32,18 @@ export default function DefaultSkillPanel({
             </label>
             <DefaultBadge title={title} />
           </div>
-          <label
-            className={`border-none relative inline-flex items-center ml-auto cursor-pointer`}
-          >
-            <input
-              type="checkbox"
-              className="peer sr-only"
-              checked={enabled}
-              onChange={() => toggleSkill(skill)}
-            />
-            <div className="peer-disabled:opacity-50 pointer-events-none peer h-6 w-11 rounded-full bg-[#CFCFD0] after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:shadow-xl after:border-none after:bg-white after:box-shadow-md after:transition-all after:content-[''] peer-checked:bg-[#32D583] peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-transparent"></div>
-            <span className="ml-3 text-sm font-medium"></span>
-          </label>
+          <Toggle
+            size="lg"
+            enabled={enabled}
+            onChange={() => toggleSkill(skill)}
+          />
         </div>
         <img src={image} alt={title} className="w-full rounded-md" />
         <p className="text-theme-text-secondary text-opacity-60 text-xs font-medium py-1.5">
           {description}
           <br />
           <br />
-          By default, this skill is enabled, but you can disable it if you don't
-          want it to be available to the agent.
+          {t("agent.skill.default_skill")}
         </p>
       </div>
     </div>

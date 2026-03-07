@@ -72,6 +72,7 @@ class AWSBedrockLLM {
         throw new Error(`Required environment variable ${envVar} is not set.`);
     }
 
+    this.className = "AWSBedrockLLM";
     this.model =
       modelPreference || process.env.AWS_BEDROCK_LLM_MODEL_PREFERENCE;
 
@@ -169,7 +170,7 @@ class AWSBedrockLLM {
     const numericLimit = Number(limit);
     if (isNaN(numericLimit) || numericLimit <= 0) {
       this.#slog(
-        `[AWSBedrock ERROR] Invalid AWS_BEDROCK_LLM_MODEL_TOKEN_LIMIT found: "${limitSourceValue}". Must be a positive number - returning default ${DEFAULT_CONTEXT_WINDOW_TOKENS}.`
+        `[AWSBedrock ERROR] Invalid AWS_BEDROCK_LLM_MODEL_TOKEN_LIMIT found: "${limit}". Must be a positive number - returning default ${DEFAULT_CONTEXT_WINDOW_TOKENS}.`
       );
       return DEFAULT_CONTEXT_WINDOW_TOKENS;
     }
@@ -448,6 +449,7 @@ class AWSBedrockLLM {
         outputTps: outputTps,
         duration: result.duration,
         model: this.model,
+        provider: this.className,
         timestamp: new Date(),
       },
     };
@@ -493,6 +495,7 @@ class AWSBedrockLLM {
         messages,
         runPromptTokenCalculation: false,
         modelTag: this.model,
+        provider: this.className,
       });
       return measuredStreamRequest;
     } catch (e) {

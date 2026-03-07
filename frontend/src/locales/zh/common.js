@@ -21,8 +21,6 @@ const TRANSLATIONS = {
       passwordReq: "密码必须至少包含 8 个字符。",
       passwordWarn: "保存此密码很重要，因为没有恢复方法。",
       adminUsername: "管理员账户用户名",
-      adminUsernameReq:
-        "用户名必须至少为 6 个字符，并且只能包含小写字母、数字、下划线和连字符，不含空格。",
       adminPassword: "管理员账户密码",
       adminPasswordReq: "密码必须至少包含 8 个字符。",
       teamHint:
@@ -66,6 +64,8 @@ const TRANSLATIONS = {
     yes: "是",
     no: "否",
     search: "搜索",
+    username_requirements:
+      "用户名必须为 2-32 个字符，以小写字母开头，只能包含小写字母、数字、下划线、连字符和句点。",
   },
   settings: {
     title: "设置",
@@ -98,6 +98,13 @@ const TRANSLATIONS = {
     contact: "联系支持",
     "browser-extension": "浏览器扩展",
     "system-prompt-variables": "系统提示变量",
+    "mobile-app": "AnythingLLM 移动版",
+    "community-hub": {
+      title: "社区中心",
+      trending: "探索热门",
+      "your-account": "您的账户",
+      "import-item": "进口商品",
+    },
   },
   login: {
     "multi-user": {
@@ -109,10 +116,7 @@ const TRANSLATIONS = {
       "forgot-pass": "忘记密码",
       reset: "重置",
     },
-    "sign-in": {
-      start: "登录你的",
-      end: "账户",
-    },
+    "sign-in": "登录你的 {{appName}} 账户",
     "password-reset": {
       title: "重置密码",
       description: "请提供以下必要信息以重置你的密码。",
@@ -201,6 +205,12 @@ const TRANSLATIONS = {
       },
       keyboardShortcuts: "键盘快捷键",
     },
+    quickActions: {
+      createAgent: "创建代理",
+      editWorkspace: "编辑工作区",
+      uploadDocument: "上传文件",
+    },
+    greeting: "今天我能帮您什么？",
   },
   "new-workspace": {
     title: "新工作区",
@@ -383,10 +393,16 @@ const TRANSLATIONS = {
       },
       web: {
         title: "实时网络搜索和浏览",
-        "desc-start":
-          "通过连接到网络搜索（搜索结果页）提供者，使你的代理能够搜索网络以回答你的问题。",
-        "desc-end": "在代理会话期间，网络搜索将不起作用，直到此设置完成。",
+        description:
+          "通过连接到搜索引擎（SERP）提供商，让您的代理能够搜索互联网来回答您的问题。",
       },
+      sql: {
+        title: "SQL 连接器",
+        description:
+          "让您的代理能够利用 SQL 来回答您的问题，只需连接到各种 SQL 数据库提供商即可。",
+      },
+      default_skill:
+        "默认情况下，这项技能已启用。但是，如果您不想让该技能被代理使用，您可以将其禁用。",
     },
   },
   recorded: {
@@ -490,8 +506,9 @@ const TRANSLATIONS = {
         link: "链接",
       },
       "render-html": {
-        title: null,
-        description: null,
+        title: "在聊天中渲染 HTML",
+        description:
+          "在助手回复中呈现 HTML 响应。\n这可以显著提高回复的质量，但也可能带来潜在的安全风险。",
       },
     },
   },
@@ -520,7 +537,8 @@ const TRANSLATIONS = {
         model_type: "模型类型",
         default: "预设",
         reasoning: "推理",
-        model_type_tooltip: null,
+        model_type_tooltip:
+          "如果您的部署使用了推理模型（例如 o1、o1-mini、o3-mini 等），请将此选项设置为“推理”。否则，您的聊天请求可能会失败。",
       },
     },
   },
@@ -716,8 +734,9 @@ const TRANSLATIONS = {
       pat_token: "Confluence 个人访问令牌",
       pat_token_explained: "您的 Confluence 个人访问令牌。",
       task_explained: "完成后，页面内容将可用于在文档选择器中嵌入至工作区。",
-      bypass_ssl: null,
-      bypass_ssl_explained: null,
+      bypass_ssl: "绕过 SSL 证书验证",
+      bypass_ssl_explained:
+        "启用此选项以绕过对自托管 Confluence 实例的 SSL 证书验证，特别是使用自签名证书的情况。",
     },
     manage: {
       documents: "文档",
@@ -825,7 +844,7 @@ const TRANSLATIONS = {
     cancel: "取消",
     edit_prompt: "编辑问题",
     edit_response: "编辑回应",
-    at_agent: "代理",
+    at_agent: "@agent",
     default_agent_description: " - 此工作区的预设代理。",
     custom_agents_coming_soon: "自定义代理功能即将推出！",
     slash_reset: "/reset",
@@ -856,8 +875,6 @@ const TRANSLATIONS = {
     profile_picture: "头像",
     remove_profile_picture: "移除头像",
     username: "用户名",
-    username_description:
-      "用户名必须仅包含小写字母、数字、下划线和连字符，且不能包含空格",
     new_password: "新密码",
     password_description: "密码长度必须至少为 8 个字符",
     cancel: "取消",

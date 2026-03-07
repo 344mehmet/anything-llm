@@ -45,7 +45,7 @@ class DellProAiStudioLLM {
       const baseURL = new URL(providedBasePath);
       const basePath = `${baseURL.origin}/v1/openai`;
       return basePath;
-    } catch (e) {
+    } catch {
       return null;
     }
   }
@@ -166,6 +166,7 @@ class DellProAiStudioLLM {
         outputTps: result.output.usage?.completion_tokens / result.duration,
         duration: result.duration,
         model: this.model,
+        provider: this.className,
         timestamp: new Date(),
       },
     };
@@ -187,6 +188,7 @@ class DellProAiStudioLLM {
       messages,
       runPromptTokenCalculation: true,
       modelTag: this.model,
+      provider: this.className,
     });
     return measuredStreamRequest;
   }

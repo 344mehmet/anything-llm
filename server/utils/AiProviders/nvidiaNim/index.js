@@ -185,6 +185,7 @@ class NvidiaNimLLM {
         outputTps: result.output.usage.completion_tokens / result.duration,
         duration: result.duration,
         model: this.model,
+        provider: this.className,
         timestamp: new Date(),
       },
     };
@@ -206,6 +207,7 @@ class NvidiaNimLLM {
       messages,
       runPromptTokenCalculation: true,
       modelTag: this.model,
+      provider: this.className,
     });
     return measuredStreamRequest;
   }
@@ -240,7 +242,7 @@ function parseNvidiaNimBasePath(providedBasePath = "") {
     const baseURL = new URL(providedBasePath);
     const basePath = `${baseURL.origin}/v1`;
     return basePath;
-  } catch (e) {
+  } catch {
     return providedBasePath;
   }
 }

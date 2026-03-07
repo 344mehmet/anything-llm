@@ -17,9 +17,11 @@ class LMStudioLLM {
     if (!process.env.LMSTUDIO_BASE_PATH)
       throw new Error("No LMStudio API Base Path was set.");
 
+    this.className = "LMStudioLLM";
+    const apiKey = process.env.LMSTUDIO_AUTH_TOKEN ?? null;
     this.lmstudio = new OpenAIApi({
       baseURL: parseLMStudioBasePath(process.env.LMSTUDIO_BASE_PATH), // here is the URL to your LMStudio instance
-      apiKey: null,
+      apiKey,
     });
 
     // Prior to LMStudio 0.2.17 the `model` param was not required and you could pass anything
@@ -28,10 +30,8 @@ class LMStudioLLM {
     // and any other value will crash inferencing. So until this is patched we will
     // try to fetch the `/models` and have the user set it, or just fallback to "Loaded from Chat UI"
     // which will not impact users with <v0.2.17 and should work as well once the bug is fixed.
-    this.model =
-      modelPreference ||
-      process.env.LMSTUDIO_MODEL_PREF ||
-      "Loaded from Chat UI";
+    this.model = modelPreference || process.env.LMSTUDIO_MODEL_PREF;
+    if (!this.model) throw new Error("LMStudio must have a valid model set.");
 
     this.embedder = embedder ?? new NativeEmbedder();
     this.defaultTemp = 0.7;
@@ -76,11 +76,17 @@ class LMStudioLLM {
       if (Object.keys(LMStudioLLM.modelContextWindows).length > 0 && !force)
         return;
 
+      const apiKey = process.env.LMSTUDIO_AUTH_TOKEN ?? null;
       const endpoint = new URL(
         parseLMStudioBasePath(process.env.LMSTUDIO_BASE_PATH)
       );
       endpoint.pathname = "/api/v0/models";
-      await fetch(endpoint.toString())
+      await fetch(endpoint.toString(), {
+        headers: {
+          "Content-Type": "application/json",
+          ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+        },
+      })
         .then((res) => {
           if (!res.ok)
             throw new Error(`LMStudio:cacheContextWindows - ${res.statusText}`);
@@ -235,6 +241,7 @@ class LMStudioLLM {
         outputTps: result.output.usage?.completion_tokens / result.duration,
         duration: result.duration,
         model: this.model,
+        provider: this.className,
         timestamp: new Date(),
       },
     };
@@ -256,12 +263,67 @@ class LMStudioLLM {
       messages,
       runPromptTokenCalculation: true,
       modelTag: this.model,
+      provider: this.className,
     });
     return measuredStreamRequest;
   }
 
   handleStream(response, stream, responseProps) {
     return handleDefaultStreamResponseV2(response, stream, responseProps);
+  }
+
+  /**
+   * Returns the capabilities of the model.
+   * This uses the new /api/v1 endpoint, which returns the model info in a different format.
+   * @returns {Promise<{tools: 'unknown' | boolean, reasoning: 'unknown' | boolean, imageGeneration: 'unknown' | boolean, vision: 'unknown' | boolean}>}
+   */
+  async getModelCapabilities() {
+    try {
+      const endpoint = new URL(
+        parseLMStudioBasePath(process.env.LMSTUDIO_BASE_PATH, "v1")
+      );
+      const apiKey = process.env.LMSTUDIO_AUTH_TOKEN ?? null;
+      endpoint.pathname += "/models";
+      const modelInfo =
+        (await fetch(endpoint.toString(), {
+          headers: {
+            "Content-Type": "application/json",
+            ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+          },
+        })
+          .then((res) => {
+            if (!res.ok)
+              throw new Error(
+                `LMStudio:getModelCapabilities - ${res.statusText}`
+              );
+            return res.json();
+          })
+          .then(({ models = [] }) =>
+            models.find((model) => model.key === this.model)
+          )) || {};
+
+      const capabilities = modelInfo.hasOwnProperty("capabilities")
+        ? modelInfo.capabilities
+        : {
+            trained_for_tool_use: "unknown",
+            vision: "unknown",
+          };
+
+      return {
+        tools: capabilities.trained_for_tool_use,
+        reasoning: "unknown",
+        imageGeneration: "unknown", // LM Studio does not support image generation yet.
+        vision: capabilities.vision,
+      };
+    } catch (error) {
+      console.error("Error getting model capabilities:", error);
+      return {
+        tools: "unknown",
+        reasoning: "unknown",
+        imageGeneration: "unknown",
+        vision: "unknown",
+      };
+    }
   }
 
   // Simple wrapper for dynamic embedder & normalize interface for all LLM implementations
@@ -284,14 +346,17 @@ class LMStudioLLM {
  * Parse the base path for the LMStudio API. Since the base path must end in /v1 and cannot have a trailing slash,
  * and the user can possibly set it to anything and likely incorrectly due to pasting behaviors, we need to ensure it is in the correct format.
  * @param {string} basePath
+ * @param {'legacy' | 'v1'} apiVersion
  * @returns {string}
  */
-function parseLMStudioBasePath(providedBasePath = "") {
+function parseLMStudioBasePath(providedBasePath = "", apiVersion = "legacy") {
   try {
     const baseURL = new URL(providedBasePath);
-    const basePath = `${baseURL.origin}/v1`;
+    let basePath = `${baseURL.origin}`;
+    if (apiVersion === "legacy") basePath += `/v1`;
+    if (apiVersion === "v1") basePath += `/api/v1`;
     return basePath;
-  } catch (e) {
+  } catch {
     return providedBasePath;
   }
 }
